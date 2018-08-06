@@ -1,0 +1,12 @@
+{
+    "logbook":{
+        "port":8080
+    },
+    "database":{
+        "name":"logbook1",
+        "server":"localhost",
+        "port":"27017",
+        "username":"user",
+        "password":"password1"
+    }
+}
