@@ -1,0 +1,70 @@
+<div ng-app="mainApp">
+    <div class="ui labeled icon visible sidebar inverted vertical menu">
+        <a class="item" href="/"><i class="home icon"></i>Home</a>
+        <a class="item" href="/data"><i class="edit icon"></i>Data</a>
+    </div>
+
+    <div class="pusher" style="width: calc(100% - 84px); margin-left: 84px;"><div ng-view></div></div>
+    <script>
+        var app = angular.module('mainApp', ['ngRoute']);
+        app.config(['$routeProvider','$locationProvider',
+        function($routeProvider, $locationProvider) {//note: keep formatting to make sure it works when minified
+            $routeProvider.
+                when('/', {
+                    templateUrl: '/components/pages/homepage.html'
+                }).
+                when('/data', {
+                    templateUrl: '/components/pages/dataHome.html',
+                    controller: 'dataHomeController'
+                }).
+                when('/data/id/:id/:index', {
+                    templateUrl: '/components/pages/entryViewer.html',
+                    controller: 'entryViewerController'
+                }).
+                when('/data/id/:id', {
+                    templateUrl: '/components/pages/idViewer.html',
+                    controller: 'idViewerController'
+                }).
+                otherwise({//fallback in case some wierd URL is asked for
+                    redirectTo: '/'
+                });
+
+            //fallback to hashbang (#!) links if browser doesn't support pretty HTML5 links
+            if(window.history && window.history.pushState){
+                $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: false
+                });
+            }
+        }]);
+
+        app.controller('dataHomeController', function ($scope, $http, $location, $route) {
+            $http.post('/data/page/1').then(function (response) {
+                $scope.tableData = response.data;
+            });
+            $scope.tableRowClick = function(id, item) {
+                $location.path('/data/id/' + id + '/' + item);
+            };
+            $scope.addIDClick = function() {
+                $http.post('/data/id/new').then(function (response) {
+                    $http.post('/data/page/1').then(function (response) {
+                        $scope.tableData = response.data;
+                    });
+                });
+            };
+            $scope.linkClick = function(path) {
+                $location.path(path);
+            };
+        });
+        app.controller('entryViewerController', function ($scope, $http, $routeParams) {
+            $http.post('/data/id/' + $routeParams.id + '/' + $routeParams.index).then(function (response) {
+                $scope.data = response.data;
+            });
+        });
+        app.controller('idViewerController', function ($scope, $http, $routeParams) {
+            $http.post('/data/id/' + $routeParams.id).then(function (response) {
+                $scope.data = response.data;
+            });
+        });
+    </script>
+</div>

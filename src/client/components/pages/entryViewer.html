@@ -1,0 +1,20 @@
+<div class="ui container" style="padding-top:1em;">
+    <table class="ui padded basic table">
+        <thead>
+            <tr>
+                <th class="collapsing"><i class="left arrow link icon"></i><!-- back arrow still needs to be implemented -->ID: {{data._id}}</th>
+                <th class="single line">User: {{data.user}}</th>
+                <th class="collapsing">Date Recorded: {{data.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</th>
+            </tr>
+        </thead>
+    </table>
+    <table class="ui padded definition celled table">
+        <tbody>
+            <tr ng-repeat="entry in data.data">
+                <td class="four wide">{{entry.key}}</td>
+                <td>{{entry.value}}</td>
+                <td>{{entry.notes}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

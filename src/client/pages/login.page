@@ -1,0 +1,55 @@
+<div class="ui container center aligned" style="margin-top: 1em;">
+    <div class="ui compact segment" style="display: inline-block;">
+        <form class="ui form mainForm" style="width: 20em">
+            <div class="field">
+                <label style="float:left;">Email</label><br>
+                <input placeholder="E-mail" name="email" type="text">
+            </div>
+            <div class="field">
+                <label style="float:left;">Password</label><br>
+                <input placeholder="Password" name="password" type="password">
+            </div>
+            <div class="fiel"><label><a href="/password_reset">Forgot Password?</a></label></div>
+            <div class="ui error message"></div>
+            <input class="ui submit button" value="Log In"></input>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('.ui.form.mainForm').form({
+        on: 'blur',
+        fields: {
+            email: {
+                identifier: 'email',
+                rules: [{
+                    type: 'email',
+                    prompt: 'Please enter a valid email address'
+                }]
+            },
+            password: {
+                identifier: 'password',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Please enter your password'
+                }]
+            }
+        }
+    });
+    $('.ui.form.mainForm').api({
+        url: '/login',
+        method : 'POST',
+        beforeSend: function(settings) {
+            settings.data = $(this).form('get values');
+            return settings;
+        },
+        onComplete: function(response) {
+            if (response == 'INVALID'){
+                $(this).form('add errors', ['Username or password invalid']);
+            }
+            else if (response == 'SUCCESS'){
+                window.location.href = '/';
+            }
+        }
+    });
+</script>
