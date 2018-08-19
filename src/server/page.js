@@ -10,7 +10,15 @@ exports.getPage = function(url) {//Not async yet. --> reading files should someh
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css"></head><body>`;
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+
+        <style>
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+
+        </head><body>`;
 
     page += fs.readFileSync('./src/client/pages/' + url + '.page', 'UTF-8');//Something needs to be done to make file read async.
     page += '</body></html>';
