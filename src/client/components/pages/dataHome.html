@@ -1,28 +1,20 @@
 <div class="ui container" style="padding-top:1em;">
     <span class="ui button" ng-click="addIDClick()"><i class="plus icon"></i> Add New ID</span>
-    <table class="ui selectable celled padded structured table">
+    <table class="ui selectable fixed single line padded table">
         <thead>
             <tr>
-                <th class="single line">ID</th>
-                <th class="single line">User</th>
-                <th class="single line">Date Recorded</th>
+                <th class="center aligned single line">ID</th>
+                <th class="center aligned single line"># of Records</th>
+                <th class="center aligned single line">Date Created</th>
+                <th class="center aligned single line">Tags</th>
             </tr>
         </thead>
         <tbody ng-repeat="id in tableData">
-            <tr ng-if="id.entries.length == 0">
-                <td rowspan="2" class="collapsing" ng-click="linkClick('/data/id/' + id._id)">{{id._id}}</td>
-            </tr>
-            <tr ng-if="id.entries.length == 0">
-                <td><i>Click <a ng-click="linkClick('/data/id/' + id._id)">here</a> to make your first entry for this ID</i></td>
-                <td>--</td>
-            </tr>
-
-            <tr ng-if="id.entries.length > 0">
-                <td rowspan="{{id.entries.length + 1}}" class="collapsing" ng-click="linkClick('/data/id/' + id._id)">{{id._id}}</td>
-            </tr>
-            <tr ng-repeat="row in id.entries" ng-click="tableRowClick(id._id, $index + 1)">
-                <td class="single line">{{row.user}}</td>
-                <td class="collapsing">{{row.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</td>
+            <tr ng-click="linkClick('/data/id/' + id._id)">
+                <td class="center aligned">{{id._id}}</td>
+                <td class="center aligned">{{id.count}}</td>
+                <td class="center aligned">{{id.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</td>
+                <td class="center aligned"></td>
             </tr>
         </tbody>
     </table>

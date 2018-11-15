@@ -1,3 +1,26 @@
 <div class="ui container" style="padding-top:1em;">
-
+    <table class="ui padded basic table">
+        <thead>
+            <tr>
+                <th class="left aligned"><i class="left arrow link icon"></i><!-- back arrow still needs to be implemented -->ID: {{data._id}}</th>
+                <th class="right aligned">Date Created: {{data.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="ui segment">
+    <span class="ui primary button" ng-click="addIDClick()"><i class="plus icon"></i> Add New ID</span>
+    <div ng-repeat="entry in data.entries" class="ui segments">
+        <div class="ui segment">
+            <div class="ui four column grid">
+                <div class="column"><a href="/data/id/{{data._id}}/{{$index + 1}}" ng-click="linkClick('/data/id/' + {{data._id}} + '/' + {{$index + 1}})" style="color: black"><b>#{{$index + 1}}</b></a></div>
+                <div class="column"><b><a href="/users/{{entry.user}}" ng-click="linkClick('/users/' + {{entry.user}})" style="color: black">{{entry.user}}</a></b></div>
+                <div class="column"><b>{{entry.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</b></div>
+                <div class="column">{{entry.tags}}</div>
+            </div>
+        </div>
+        <div ng-if="entryOpen[$index] == 'open'" class="ui segment">
+            Content
+        </div>
+    </div>
+    </div>
 </div>

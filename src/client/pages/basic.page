@@ -47,9 +47,7 @@
             };
             $scope.addIDClick = function() {
                 $http.post('/data/id/new').then(function (response) {
-                    $http.post('/data/page/1').then(function (response) {
-                        $scope.tableData = response.data;
-                    });
+                    $location.path('/data/id/' + response.data);
                 });
             };
             $scope.linkClick = function(path) {
@@ -63,8 +61,22 @@
         });
         app.controller('idViewerController', function ($scope, $http, $routeParams) {
             $http.post('/data/id/' + $routeParams.id).then(function (response) {
+                response.data.entries.reverse();
+                $scope.entryOpen = [];
+                for (i in response.data.entries) {
+                    if (i == 0) {
+                        $scope.entryOpen.push('open');
+                    }
+                    else {
+                        $scope.entryOpen.push('not open');
+                    }
+                }
                 $scope.data = response.data;
             });
+
+            $scope.linkClick = function(path) {
+                $location.path(path);
+            };
         });
     </script>
 </div>
