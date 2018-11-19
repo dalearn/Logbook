@@ -59,24 +59,29 @@ function run() {
     });
 
     app.post('/data/id/new', function(req, res) {
-        id = database.createNewID();
-        res.send(id);
-    });
-
-    app.post('/data/id/:id/', function(req, res) {
-        database.getID(req.params.id, function(res2) {
+        database.createNewID(function(res2) {
             res.send(res2);
         });
     });
 
-    app.post('/data/id/:id/:index', function(req, res) {
-        database.getEntryInID(req.params.id, req.params.index - 1, function(res2) {
+    app.post('/data/id/:id/new', function(req, res) {
+        var entry = {
+            "user":"fred",
+            "timestamp":new Date(),
+            data:req.body
+        }
+        database.addEntryToID(req.params.id, entry, function(res2) {
+            res.send(res2);
+        });
+    });
+
+    app.post('/data/id/:id', function(req, res) {
+        database.getID(req.params.id, function(res2) {
             res.send(res2);
         });
     });
 
     app.get('*', function(req, res) {//any special pages should go above this catch-all.
         res.send(page.getPage('basic'));
-        //database.createNewEntry('5b69c35ac2cc78c8979a8a9b', {'user':'frank', 'timestamp':new Date()});
     });
 }

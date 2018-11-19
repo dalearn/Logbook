@@ -2,25 +2,58 @@
     <table class="ui padded basic table">
         <thead>
             <tr>
-                <th class="left aligned"><i class="left arrow link icon"></i><!-- back arrow still needs to be implemented -->ID: {{data._id}}</th>
+                <th class="left aligned"><i class="left arrow link icon" ng-click="linkClick('/data')"></i>ID: {{data._id}}</th>
                 <th class="right aligned">Date Created: {{data.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</th>
             </tr>
         </thead>
     </table>
     <div class="ui segment">
-    <span class="ui primary button" ng-click="addIDClick()"><i class="plus icon"></i> Add New ID</span>
-    <div ng-repeat="entry in data.entries" class="ui segments">
-        <div class="ui segment">
-            <div class="ui four column grid">
-                <div class="column"><a href="/data/id/{{data._id}}/{{$index + 1}}" ng-click="linkClick('/data/id/' + {{data._id}} + '/' + {{$index + 1}})" style="color: black"><b>#{{$index + 1}}</b></a></div>
-                <div class="column"><b><a href="/users/{{entry.user}}" ng-click="linkClick('/users/' + {{entry.user}})" style="color: black">{{entry.user}}</a></b></div>
-                <div class="column"><b>{{entry.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</b></div>
-                <div class="column">{{entry.tags}}</div>
+        <span class="ui primary button" ng-click="linkClick('/data/id/' + data._id + '/new')"><i class="plus icon"></i> Add New Entry</span>
+        <div ng-repeat="entry in data.entries" class="ui segments">
+            <div class="ui segment" onselectstart="return false;" ondragstart="return false;">
+                <div ng-click="switch($index)" style="color: black">
+                    <div class="ui four column grid">
+                        <div class="column">
+                            <i class="caret right icon" ng-if="entryOpen[$index] == 'not open'"></i>
+                            <i class="caret down icon" ng-if="entryOpen[$index] == 'open'"></i>
+                            <b>#{{data.entries.length - $index}}</b>
+                        </div>
+                        <div class="column">
+                            <b>{{entry.user}}</b>
+                        </div>
+                        <div class="column">
+                            <b>{{entry.timestamp | date:'MM/dd/yyyy hh:mm:ss'}}</b>
+                        </div>
+                        <div class="column">{{entry.tags}}</div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="entryOpen[$index] == 'open'" class="ui segment">
+                <table class="ui padded celled table">
+                    <thead>
+                        <tr>
+                            <th class="ui four wide column">
+                                {{entry.data[0][0]}}
+                            </th>
+                            <th ng-repeat="columnValue in entry.data[0] track by $index" ng-if="!$first">
+                                {{columnValue}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in entry.data track by $index" ng-if="!$first">
+                            <td ng-repeat="columnValue in row track by $index">
+                                {{columnValue}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div ng-if="entryOpen[$index] == 'open'" class="ui segment">
-            Content
+        <div class="ui placeholder segment" ng-if="data.entries.length == 0">
+          <div class="ui icon header">
+            No entries have been added yet.
+          </div>
         </div>
-    </div>
     </div>
 </div>

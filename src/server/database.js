@@ -53,14 +53,16 @@ exports.getID = function(id, callback) {
 
 exports.getEntryInID = function(id, index, callback) {
     db.collection('data').findOne({ _id: ObjectId(id) }, function(err, res) {
-        if (err) console.log(err);
+        if (err) {
+            console.log(err);
+        }
         var temp = res.entries[index];
         temp._id = id;
         callback(temp);
     });
 }
 
-exports.createNewID = function() {
+exports.createNewID = function(callback) {
     var id = new ObjectId();
     var template = {
         _id:id,
@@ -69,15 +71,22 @@ exports.createNewID = function() {
     db.collection('data').insertOne(template, function(err, res) {
         if (err) {
             console.log(err);
+            callback('');
+        }
+        else {
+            callback(id.toHexString());
         }
     });
-    return id.toHexString();
 }
 
-exports.createNewEntry = function(id, entry) {
+exports.addEntryToID = function(id, entry, callback) {
     db.collection('data').updateOne({ _id:ObjectId(id) }, { $addToSet:{ 'entries':entry }}, function(err, res) {
         if (err) {
             console.log(err);
+            callback('FAILURE');
+        }
+        else {
+            callback('SUCCESS');
         }
     });
 }

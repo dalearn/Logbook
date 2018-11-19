@@ -1,0 +1,63 @@
+<div class="ui container" style="padding-top:1em;">
+    <table class="ui basic table">
+        <tr>
+            <td class="left aligned">
+                <select class="ui search dropdown">
+                    <option value="">Choose a Template</option>
+                    <option value="Custom">Custom</option>
+                </select>
+            </td>
+            <td class="right aligned">
+                <button class="ui button" ng-click="cancelAction()">Cancel</button>
+                <button class="ui primary button" ng-click="saveAction()">Save</button>
+            </td>
+        </tr>
+    </table>
+    <table class="ui padded celled table">
+        <thead>
+            <tr>
+                <th class="ui four wide column">
+                    <div class="ui fluid input">
+                        <input ng-model="table[0][0]" type="text" value="{{table[0][0]}}">
+                    </div>
+                </th>
+                <th ng-repeat="columnValue in table[0] track by $index" ng-if="!$first">
+                    <div class="ui fluid input">
+                        <input ng-model="table[0][$index]" type="text" value="{{columnValue}}">
+                    </div>
+                </th>
+                <th><!-- this is here simply to fill out the action column on the header --></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in table track by $index" ng-if="!$first">
+                <td ng-repeat="columnValue in row track by $index">
+                    <div class="ui fluid input">
+                        <input ng-model="table[$parent.$index][$index]" type="text" value="{{columnValue}}">
+                    </div>
+                </td>
+                <td class="collapsing">
+                    <i class="trash link icon" ng-click="removeRow($index)">
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="left aligned">
+                    <div class="ui fluid selection dropdown">
+                        <input name="id" type="hidden" value="0">
+                        <div class="text">{{columnCount}} Columns</div><i class="dropdown icon"></i>
+                        <div class="menu transition hidden">
+                            <div data-value="{{item}}" class="item" ng-repeat="item in columnOptions" ng-click="columnChange(item)">
+                                {{item}} Columns
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th class="right aligned" colspan="{{table[0].length}}">
+                    <button class="ui button" ng-click="addRow()"><i class="plus icon"></i> Add Row</button>
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

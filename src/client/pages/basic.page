@@ -17,13 +17,13 @@
                     templateUrl: '/components/pages/dataHome.html',
                     controller: 'dataHomeController'
                 }).
-                when('/data/id/:id/:index', {
-                    templateUrl: '/components/pages/entryViewer.html',
-                    controller: 'entryViewerController'
-                }).
                 when('/data/id/:id', {
                     templateUrl: '/components/pages/idViewer.html',
                     controller: 'idViewerController'
+                }).
+                when('/data/id/:id/new', {
+                    templateUrl: '/components/pages/newEntry.html',
+                    controller: 'newEntryController'
                 }).
                 otherwise({//fallback in case some wierd URL is asked for
                     redirectTo: '/'
@@ -54,12 +54,8 @@
                 $location.path(path);
             };
         });
-        app.controller('entryViewerController', function ($scope, $http, $routeParams) {
-            $http.post('/data/id/' + $routeParams.id + '/' + $routeParams.index).then(function (response) {
-                $scope.data = response.data;
-            });
-        });
-        app.controller('idViewerController', function ($scope, $http, $routeParams) {
+
+        app.controller('idViewerController', function ($scope, $http, $location, $routeParams) {
             $http.post('/data/id/' + $routeParams.id).then(function (response) {
                 response.data.entries.reverse();
                 $scope.entryOpen = [];
@@ -73,10 +69,64 @@
                 }
                 $scope.data = response.data;
             });
-
+            $scope.open = function(index) {
+                $scope.entryOpen[index] = 'open';
+            }
+            $scope.close = function(index) {
+                $scope.entryOpen[index] = 'not open';
+            }
+            $scope.switch = function(index) {
+                if ($scope.entryOpen[index] == 'open') {
+                    $scope.entryOpen[index] = 'not open';
+                }
+                else {
+                    $scope.entryOpen[index] = 'open';
+                }
+            }
             $scope.linkClick = function(path) {
                 $location.path(path);
             };
+        });
+
+        app.controller('newEntryController', function ($scope, $http, $location, $routeParams) {
+            $scope.columnOptions = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+            $scope.table = [
+                ['', ''],
+                ['', '']
+            ];
+            $scope.columnCount = $scope.table[0].length;
+            $scope.columnChange = function(x) {
+                $scope.columnCount = x;
+                for (row in $scope.table) {
+                    var hold = [];
+                    for (var i = 0; i != $scope.columnCount; i++) {
+                        hold[i] = $scope.table[row][i];
+                    }
+                    $scope.table[row] = hold;
+                }
+            }
+            $scope.addRow = function() {
+                hold = [];
+                for (var i = 0; i != $scope.columnCount; i++) {
+                    hold[i] = '';
+                }
+                $scope.table.push(hold);
+            };
+            $scope.removeRow = function(index) {
+                $scope.table.splice(index, 1);
+            };
+            $scope.cancelAction = function() {
+                $location.path('/data/id/' + $routeParams.id);
+            };
+            $scope.saveAction = function() {
+                $http.post('/data/id/' + $routeParams.id + '/new', $scope.table).then(function (response) {
+                    console.log(response);
+                    if (response.data == 'SUCCESS') {
+                        $location.path('/data/id/' + $routeParams.id);
+                    }
+                });
+            };
+            $('.ui.dropdown').dropdown();
         });
     </script>
 </div>
